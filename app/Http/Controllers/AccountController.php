@@ -9,7 +9,7 @@ use App\Models\Account;
 
 class AccountController extends Controller
 {
-    public function get_all_accounts(Request $request) {
+    public function get_all(Request $request) {
         return response()->json(Account::all());
     }
 
@@ -21,22 +21,20 @@ class AccountController extends Controller
         }
 
         $validated = $validator->validated();
-        $account = Account::create([
-            'user_id' => $validated['user_id'],
-            'balance' => $validated['balance'],
-        ]);
+        $account = new Account;
+        $account->fill($validated);
         return response()->json($account, 201);
     }
 
     public function get_by_id($id) {
-        $accounts = Account::where('user_id','=', $id);
-        if ($accounts->count() > 0) {
-            return response()->json($accounts->get(), 200);
-        }
-        if (is_numeric($id)) {
+        $account = Account::find($id);
+        if ($account == null) {
             return response()->json(sprintf('there is no user with id %d', $id), 404);
         }
-        return response()->json('should be given integer', 404);
+        if (is_numeric($id)) {
+            return response()->json('should be given integer', 404);
+        }
+        return response()->json($account, 200);
     }
 
     public function update_by_id(Request $request, $id) {
