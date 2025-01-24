@@ -14,15 +14,7 @@ class AccountController extends Controller
     }
 
     public function store(Request $request) {
-        $validation_rulse = [
-            'user_id' => 'required|integer|exists:users,id',
-            'balance' => 'required|numeric|min:0',
-        ];
-        $validation_err_msgs = [
-            'user_id' => 'The :attribute must exists',
-            'balance' => 'The :attribute muse bet at least :min',
-        ];
-        $validator =  Validator::make($request->all(), $validation_rulse, $validation_err_msgs);
+        $validator = $this->validate_store_request($request);
  
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -34,5 +26,17 @@ class AccountController extends Controller
             'balance' => $validated['balance'],
         ]);
         return response()->json($account, 201);
+    }
+
+    public function validate_store_request(Request $request) {
+        $validation_rulse = [
+            'user_id' => 'required|integer|exists:users,id',
+            'balance' => 'required|numeric|min:0',
+        ];
+        $validation_err_msgs = [
+            'user_id' => 'The :attribute must exists',
+            'balance' => 'The :attribute muse bet at least :min',
+        ];
+        return Validator::make($request->all(), $validation_rulse, $validation_err_msgs);
     }
 }
