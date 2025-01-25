@@ -23,16 +23,17 @@ class AccountController extends Controller
         $validated = $validator->validated();
         $account = new Account;
         $account->fill($validated);
+        $account->save();
         return response()->json($account, 201);
     }
 
     public function get_by_id($id) {
+        if (!is_numeric($id)) {
+            return response()->json('should be given integer', 404);
+        }
         $account = Account::find($id);
         if ($account == null) {
             return response()->json(sprintf('there is no user with id %d', $id), 404);
-        }
-        if (is_numeric($id)) {
-            return response()->json('should be given integer', 404);
         }
         return response()->json($account, 200);
     }
