@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('from_account_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('to_account_id')->constrained('users')->onDelete('cascade');
             $table->decimal('amount');
-            $table->string('description');
+            $table->string('description')->default('');
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
             $table->timestamps();
         });
