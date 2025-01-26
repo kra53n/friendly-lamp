@@ -23,16 +23,19 @@ class TransactionsProcess extends Command
      */
     protected $description = 'Process transactions with `pending` status';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $transactions = Transaction::where('status', 'pending')->get();
         $accounts = self::get_accounts_by_transactions($transactions);
+        $failed_transactions = 0;
         foreach ($transactions as $transaction) {
             self::process_transaction($transaction, $accounts);
+            if ($transaction->status == 'failed') {
+                $failed_transactions++;
+            }
         }
+        $completed_transactions = count($transactions);
+        printf('%d транзакций успешно обработались, %d транзакций было провалено', $completed_transactions, $failed_transactions);
     }
 
     public static function process_transaction(Transaction $transaction, $accounts) {
