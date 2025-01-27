@@ -34,7 +34,7 @@ class TransactionsProcess extends Command
                 $failed_transactions++;
             }
         }
-        $completed_transactions = count($transactions);
+        $completed_transactions = count($transactions) - $failed_transactions;
         printf('%d транзакций успешно обработались, %d транзакций было провалено', $completed_transactions, $failed_transactions);
     }
 
