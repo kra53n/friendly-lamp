@@ -14,7 +14,7 @@ class AccountTest extends TestCase
     {
         $account = Account::factory()->create();
         $account->save();
-        $response = $this->get(sprintf('/accounts/%d', $account->id));
+        $response = $this->get(sprintf('/api/accounts/%d', $account->id));
 
         $response->assertStatus(200);
         $response->assertJson([
@@ -31,7 +31,7 @@ class AccountTest extends TestCase
             'user_id' => $user->id,
             'balance' => 100,
         ];
-        $response = $this->postJson('/accounts', $data);
+        $response = $this->postJson('/api/accounts', $data);
         $response->assertStatus(201);
         $this->assertDatabaseHas('accounts', $data);
     }
@@ -43,7 +43,7 @@ class AccountTest extends TestCase
             'user_id' => $user->id,
             'balance' => -1,
         ];
-        $response = $this->postJson('/accounts', $data);
+        $response = $this->postJson('/api/accounts', $data);
         $response->assertStatus(400);
     }
 
@@ -55,7 +55,7 @@ class AccountTest extends TestCase
         $data = [
             'balance' => 3333,
         ];
-        $response = $this->putJson(sprintf('/accounts/%d', $account->id), $data);
+        $response = $this->putJson(sprintf('/api/accounts/%d', $account->id), $data);
         $response->assertStatus(200);
         $account->refresh();
         $this->assertNotEquals($balance_before, $account['balance']);

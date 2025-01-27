@@ -21,7 +21,7 @@ class TransactionTest extends TestCase
             'amount' => 30,
             'status' => 'pending',
         ];
-        $response = $this->postJson('/transactions', $data);
+        $response = $this->postJson('/api/transactions', $data);
         $response->assertStatus(201);
         $this->assertDatabaseHas('transactions', $data);
     }
@@ -34,7 +34,7 @@ class TransactionTest extends TestCase
         $data = [
             'balance' => 3333,
         ];
-        $response = $this->putJson(sprintf('/transactions/%d', $transaction->id), $data);
+        $response = $this->putJson(sprintf('/api/transactions/%d', $transaction->id), $data);
         $response->assertStatus(200);
         $transaction->refresh();
         $this->assertNotEquals($balance_before, $transaction['amount']);
